@@ -1,0 +1,12 @@
+.filters{
+    display : flex;
+    gap: 8px;
+    margin-bottom : 16px;
+}
+@media(max-width: 480px){
+    .filters{
+        flex-direction: column;
+        gap:  4px;
+        margin-bottom: 8px;
+    }
+}

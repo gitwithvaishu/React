@@ -1,0 +1,64 @@
+.formFields{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+}
+
+.formGroup{
+    display: flex;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.formField{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+    flex-basis: 50%;
+    justify-content: center;
+}
+
+.formField label{
+    font-size: 14px;
+}
+
+.formField input,
+.formField select,
+.formField textarea{
+    width: 100%;
+}
+
+.formField textarea{
+    resize: none;
+}
+
+
+@media (max-width: 768px){
+    
+    .formGroup{
+        flex-direction: column;
+        gap: 10px;
+    }
+    .formField{
+        flex-basis: 100%;
+    }
+    .formField label{
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px){
+    
+    .formField label{
+        font-size: 12px;
+    }
+    .formField input,
+    .formField select,
+    .formField textarea{
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+

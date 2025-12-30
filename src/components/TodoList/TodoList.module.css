@@ -1,0 +1,14 @@
+.todoList{
+    display: flex;
+    flex-direction: column;
+    gap:12px;
+    flex-grow: 1;
+    max-height: 100vh;
+}
+
+
+@media (max-width: 480px){
+    .todoList{
+        gap:8px;
+    }
+}

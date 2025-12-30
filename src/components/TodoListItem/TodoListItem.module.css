@@ -1,0 +1,86 @@
+.todoListItem[data-completed = "true"] .info{
+    text-decoration: line-through;
+}
+
+.content{
+    display: flex;
+    gap: 4px;
+}
+
+.status{
+    align-self: flex-start;
+    margin-top: 6px;
+}
+
+.info{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.description{
+    font-size:13px;
+    color: gray;
+}
+
+.additionalInfo{
+    font-size:13px;
+    color: gray;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 4px;
+}
+
+.controls{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    align-self: flex-start;
+    
+}
+
+.controls button,
+.controls input{
+    font-size: 13px;
+}
+
+@media (max-width: 480px){
+    .content{
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .status{
+        margin-top: 0;
+    }
+
+    .controls{
+        align-self: stretch;
+        justify-content: flex-end;
+    }
+    .additionalInfo{
+        gap: 4px;
+    }
+}
+
+@media (min-width: 768px){
+    .content{
+        gap: 8px;
+    }
+
+    .controls{
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .controls button,
+    .controls input{
+        font-size: 14px;
+        padding: 4px 8px;
+    }
+
+    .description,
+    .additionalInfo{
+        font-size: 12px;
+    }
+}

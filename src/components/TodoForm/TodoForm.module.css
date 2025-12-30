@@ -1,0 +1,45 @@
+.title{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.title button{
+    align-self: center;
+    font-size: 12px;
+    cursor: pointer;
+}
+.form{
+    display: flex;
+    flex-direction:column;
+    gap: 4px;
+    height: 100%;
+    width: 100%;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.form input[type="submit"]{
+    width:100%;
+    margin-top: 3px;
+}
+
+
+@media (max-width: 768px){
+    .form{
+        height: auto;
+    }
+    
+}
+
+@media (max-width: 480px){
+    .title{
+        font-size: 18px;
+    }
+    .form{
+        gap: 12px;
+    }
+    
+}
+
