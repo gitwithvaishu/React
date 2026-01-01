@@ -1,33 +1,31 @@
 // importing necessary modules and components
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { PRIORITY_DEFAULT} from '../../constants/priorities';
 import { TodoFormFields } from '../TodoFormFields/TodoFormFields';
+import { getTodoSchema } from '../../schemas/todo';
 import styles from './TodoForm.module.css';
 
 export function TodoForm({onCreate}){
     
     //useState hook to handle the fields visibility 
     const[showAllFields, setShowAllFields] = useState(false);
+    const {register, handleSubmit, reset, formState: {errors}} = useForm({
+        resolver: yupResolver(getTodoSchema({isNew:true})),
+        defaultValues: {
+            description: "",
+            deadline: "",
+            priority: PRIORITY_DEFAULT,
+            completed:false
+        },
+    });
 
     // function to handle form submission
-    function handleSubmit(event){
-
-        event.preventDefault();
-
-        const {elements} = event.target;
-
-        if(elements.name.value === "") return;
-
+    function handleCreate(data){
         // calling onCreate function passed as prop with new todo data
-        onCreate({
-            name: elements.name.value,
-            description: elements.description?.value ?? "",
-            deadline: elements.deadline?.value ?? "",
-            priority: elements.priority?.value ?? PRIORITY_DEFAULT,
-            completed: false,
-        });
-
-        event.target.reset();
+        onCreate(data);
+        reset();
     }
     return(
         <>
@@ -40,8 +38,8 @@ export function TodoForm({onCreate}){
                 </h3>
 
                 {/* form to add new todo */}
-                <form className={styles.form} onSubmit={handleSubmit}>
-                    <TodoFormFields showAllFields={showAllFields} />
+                <form className={styles.form} onSubmit={handleSubmit(handleCreate)}>
+                    <TodoFormFields showAllFields={showAllFields} register={register} errors={errors} />
                     {/* Button to submit the form */}
                     <input type="submit" value="Add" />
                 </form>

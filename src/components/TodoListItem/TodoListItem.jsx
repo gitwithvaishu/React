@@ -1,37 +1,28 @@
 // importing necessary modules and components
-
-
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 // using PRIORITIES and PRIORITY_DEFAULT constants for priority handling for color coding and default value
 import { PRIORITIES, PRIORITY_DEFAULT} from '../../constants/priorities';
 import styles from './TodoListItem.module.css';
+import { getTodoSchema } from '../../schemas/todo';
 import { TodoFormFields } from '../TodoFormFields/TodoFormFields';
 
 export function TodoListItem({todo , onUpdate, onDelete}){
 
     const [isEdit, setIsEdit] = useState(false);
+    const {register, handleSubmit, formState:{errors}} = useForm(
+        {resolver: yupResolver(getTodoSchema()),
+        defaultValues: todo},);
  
     // function to handle the completed status change based on checkbox input event
     function handleCompleted(event){
         onUpdate(todo.id, {...todo, completed: event.target.checked});
     }
 
-    function handleEdit(event){
-        event.preventDefault();
-
-        const {elements} = event.target;
-
-        if(elements.name.value === "") return;
-
+    function handleEdit(data){
         // calling onCreate function passed as prop with new todo data
-        onUpdate(todo.id,{
-            name: elements.name.value,
-            description: elements.description?.value,
-            deadline: elements.deadline?.value,
-            priority: elements.priority?.value,
-            completed: todo.completed,
-        });
-
+        onUpdate(todo.id, data);
         setIsEdit(false);
     }
 
@@ -70,8 +61,8 @@ export function TodoListItem({todo , onUpdate, onDelete}){
     
 
     const editingTemplate = (
-        <form className={styles.content} onReset={()=>setIsEdit(false)} onSubmit={handleEdit}>
-            <TodoFormFields todo={todo} />
+        <form className={styles.content} onReset={()=>setIsEdit(false)} onSubmit={handleSubmit(handleEdit)}>
+            <TodoFormFields todo={todo} register={register} errors={errors} />
 
             <div className={styles.controls}>
                 <input type="submit" value="💾" />
