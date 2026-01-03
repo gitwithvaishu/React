@@ -1,10 +1,8 @@
+import { useEffect, useState } from 'react';
 import styles from './App.module.css';
 import { TodoForm } from './components/TodoForm/TodoForm';
 import { TodoList } from './components/TodoList/TodoList';
 import { TodoFilters } from './components/TodoFilters/TodoFilters';
-import { useTodo } from './hooks/todo';
-import { Alert } from './components/Alerts/Alert';
-import { Loader } from './components/Loader/Loader';
 
 // const TODO_DEFAULTS = [
 //   {
@@ -50,66 +48,64 @@ import { Loader } from './components/Loader/Loader';
 // ]
 
 function App() {
-  // const [todos, setTodos] = useState([]);
-  // const [filters, setFilters] = useState({});
+  const [todos, setTodos] = useState([]);
+  const [filters, setFilters] = useState({});
 
-  // async function fetchTodos(){
-  //   try {
-  //     const data = await api.todos.getAll(filters);
-  //     setTodos(data);
-  //   } catch (error) {
-  //     console.error("Failed to fetch the Data")
-  //   }
-  //   // api.todos.getAll(filters).then(setTodos);
-  // }
+  function fetchTodos(){
+    const searchParams = new URLSearchParams(filters).toString();
+    fetch(`${import.meta.env.VITE_MOCKAPI_BASE_URL}/todos?${searchParams}`,{
+      method: "GET",
+      headers: {"content-type":"application/json"},
+    })
+      .then((response) => {
+        if(response.ok) return response.json();
+        if(response.status===404) return [];
+      })
+      .then(setTodos);
+  }
 
-  // useEffect(()=>{
-  //   fetchTodos();
-  // }, [filters]);
+  useEffect(()=>{
+    fetchTodos();
+  }, [filters]);
   
-  // async function handleCreate(newTodo){
-  //   try {
-  //     const data = await api.todos.create(newTodo);
-  //     await fetchTodos(data);
-  //   } catch (error) {
-  //     console.error("Failed to create new todo.");
-  //   }
-  //   // setTodos((prevTodos) =>(
-  //   //   [
-  //   //     ...prevTodos,
-  //   //     {id : `${prevTodos.length + 1}`, ...newTodo},
-  //   //   ]
-  //   // ));
-    
-  //   // api.todos.create(newTodo).then(fetchTodos);
-  // }
+  function handleCreate(newTodo){
+    // setTodos((prevTodos) =>(
+    //   [
+    //     ...prevTodos,
+    //     {id : `${prevTodos.length + 1}`, ...newTodo},
+    //   ]
+    // ));
+    fetch(`${import.meta.env.VITE_MOCKAPI_BASE_URL}/todos`,{
+      method: "POST",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify(newTodo),
+    })
+      .then((response) =>  !!response.ok && response.json())
+      .then(fetchTodos);
+  }
 
-  // async function handleUpdate(id, newTodo){
-  //   try {
-  //     const data = await api.todos.update(id, newTodo);
-  //     await fetchTodos(data);
-  //   } catch (error) {
-  //     console.error("Failed to update the todo.");
-  //   }
-  //   // setTodos((prevTodos)=> 
-  //   //   prevTodos.map((todo) => 
-  //   //     id === todo.id ? newTodo: todo)
-  //   // );
-    
-  //   // api.todos.update(id,newTodo).then(fetchTodos);
-  // }
+  function handleUpdate(id, newTodo){
+    // setTodos((prevTodos)=> 
+    //   prevTodos.map((todo) => 
+    //     id === todo.id ? newTodo: todo)
+    // );
+    fetch(`${import.meta.env.VITE_MOCKAPI_BASE_URL}/todos/${id}`,{
+      method: "PUT",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify(newTodo),
+    })
+      .then((response) =>  !!response.ok && response.json())
+      .then(fetchTodos);
+  }
 
-  // async function handleDelete(id){
-  //   try {
-  //     await api.todos.delete(id);
-  //     await fetchTodos();
-  //   } catch (error) {
-  //     console.error("Failed to delete the todo");
-  //   }
-  //   // setTodos((prevTodos)=> prevTodos.filter((todo) => todo.id != id));
-    
-  //   // api.todos.delete(id).then(fetchTodos);
-  // }
+  function handleDelete(id){
+    // setTodos((prevTodos)=> prevTodos.filter((todo) => todo.id != id));
+    fetch(`${import.meta.env.VITE_MOCKAPI_BASE_URL}/todos/${id}`,{
+      method: "DELETE",
+    })
+      .then((response) =>  !!response.ok && response.json())
+      .then(fetchTodos);
+  }
 
   // function filterTodos(todo){
   //   const {completed, priority} = filters;
@@ -119,8 +115,6 @@ function App() {
   //     (priority === ""|| todo.priority === priority)
   //   );
   // }
-
-  const todo = useTodo();
 
   return (
     <>
@@ -134,22 +128,17 @@ function App() {
 
         {/* Main Container */}
         <div className={styles.AppContainer}>
-          {todo.isLoading && <Loader/>}
-          {!!todo.error.message && (
-            <Alert onClear={todo.error.clear}>{todo.error.message}</Alert>
-          )}
-
           {/* to get data from Todo Form  by sending the handlecrete to onCreate as a props*/}
-          <TodoForm onCreate={todo.create}/>
+          <TodoForm onCreate={handleCreate}/>
 
-          <TodoFilters onFilters={todo.filter}/>
+          <TodoFilters onFilters={setFilters}/>
 
           {/* to display the todos by sending the todos and handleUpdate to onUpdate as a props */}
           <div >
             <TodoList 
-              todos={todo.data} 
-              onUpdate={todo.update} 
-              onDelete={todo.delete} 
+              todos={todos} 
+              onUpdate={handleUpdate} 
+              onDelete={handleDelete} 
             />
           </div>
         </div>

@@ -9,7 +9,7 @@ export function TodoList({todos, onUpdate, onDelete}){
             <section>
                 <h3>ToDo List</h3>
 
-                {!todos.length && <p>Sorry, No todos to display</p> }
+                {!todos.length && <p>Soory, No todos to display</p> }
                 <ul className={styles.todoList}>
                     {/* Displaying todos using map function */}
                     {todos.map((todo)=>
