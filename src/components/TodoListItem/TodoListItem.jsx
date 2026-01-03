@@ -43,11 +43,17 @@ export function TodoListItem({todo , onUpdate, onDelete}){
                         {todo.deadline}
                         {" "}
                         {/* changing the color of the priority based the priority value */}
-                        {todo.priority !== PRIORITY_DEFAULT && (
+                        {/* {todo.priority !== PRIORITY_DEFAULT && (
+                            <span style={{ color: PRIORITIES[todo.priority].color }}>
+                                {PRIORITIES[todo.priority].label}
+                            </span>
+                        )} */}
+                        {PRIORITIES[todo.priority] && (
                             <span style={{ color: PRIORITIES[todo.priority].color }}>
                                 {PRIORITIES[todo.priority].label}
                             </span>
                         )}
+
                     </div>
                 </div>
 
